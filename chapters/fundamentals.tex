@@ -1,1 +1,44 @@
 \chapter{Fundamentals}
+In this chapter, the technical basics of this thesis are presented, initially, an introduction to virtual machines and penetration testing is given, followed by some explanation on python and YAML files.
+
+\section{Virtual Machines}
+A virtual machine (VM) is a virtual environment that works like a computer system with its own resources, like CPU, memory, and storage, created on an actual physical hardware system. With the help of a software called  “hypervisor”, the machine’s resources get separated from the hardware so they can be provided in the right manner to be used by the VM.\\
+The physical machines, ones equipped with a hypervisor, are called host machines (host), while the many VMs that utilize its resources are guest machines (guest). The hypervisor treats the host’s resources as a pool of resources that can be simply distributed and relocated between existing guests as well as new virtual machines. VMs are also isolated from the rest of the system, and multiple of them can co-exist on a single physical piece of hardware. They can be dynamically relocated between host servers depending on demand.\\
+One of the advantages of virtual machines is allowing numerous operating systems to run on a single computer at the same time, and each operating system runs as if it’s running on the host hardware, thus the user experience within the VM is almost identical to that of a real-time operating system experience running on a physical machine\cite{vm_redhat}.
+
+\section{Penetration Testing}
+A penetration test, or a pen test, is a simulated cyberattack against a computer system for the purpose of checking for security vulnerabilities. Pen testing can expose various types of security weaknesses in an application system (e.g. APIs and servers), it can also identify unsanitized inputs that are vulnerable to code injection attacks.\\
+The pen testing process can be broken down into five stages:\\
+\begin{enumerate}
+    \item \textbf{Planning and reconnaissance:} Defining the goals and scope of a test, including the testing methods to be used and the systems to be addressed.
+    \item \textbf{Scanning:} Understanding the target application and how will it respond to several intrusion attempts. This can be done by inspecting an application’s code to estimate the way it behaves while running.
+    \item \textbf{Gaining Access:} This stage consists of exploitation techniques that expose web application vulnerability, such as cross-site scripting and SQL injection. Attackers then use these techniques to escalate privileges and steal data to understand the scope of damage they can create.
+    \item \textbf{Maintaining access:} This aims to see if an exploit can be used to gain a persistent presence in an exploited system, long enough for a bad actor to gain in-depth access.
+    \item \textbf{Analysis:} Results of the pen test are then compiled into a report containing the vulnerabilities that were exploited, sensitive data that was accessed, and the amount of time the pen tester was able to remain in the system undetected\cite{pentest}.
+\end{enumerate}
+
+\section{Python}
+Python is a high-level programming language that has a variety of object-oriented features. Its flexible and high-level structure makes it very attractive for developing rapid application development. Its simple and easy-to-learn syntax helps minimize program maintenance.\\
+The rapid edit-test-debug cycle of Python makes it very easy to debug programs. When an error occurs, the interpreter prints a stacktrace, which tells the program which of the available exceptions has been encountered.\\
+The source level debugger simplifies the debugging process by allowing the program to inspect and evaluate the code at a time\cite{python.org}.
+
+\section{YAML}
+YAML is a data serialization language that is often used to create configuration files,
+It stands for yet another markup language and evolved into ain’t markup language,  which highlights that YAML is for data and not for documents. It is also easy to understand and is human-readable.\\
+YAML is a superset of JSON, so JSON files are valid in YAML, but it uses Python-style indentation to indicate nesting, as there are no usual format symbols, such as braces, square brackets, YAML files use a .yml or .yaml extension.\\
+The structure of a YAML file is a map or a list.
+Mappings allow you to group key-value pairs into distinct values. Order is not relevant, and each key must be unique. A map needs to be resolved before it can be closed. A new map can then be created by either creating an adjacent map or increasing the indentation level.\\
+A list sequence is a type of object that contains values in an order. It can contain multiple items, and starts with a dash (-) and a space, while indentation separates it from the parent.
+Naturally, YAML also contains scalars that can be used as values such as strings, integers, or booleans\cite{yaml_redhat}.
+
+Example of YAML syntax:
+
+\begin{lstlisting}[caption=YAML example, style=pythonstyle]
+---
+name: max
+enrolled: True
+languages:
+  - english
+  - german
+
+\end{lstlisting}
