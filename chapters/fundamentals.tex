@@ -4,7 +4,9 @@ In this chapter, the technical basics of this thesis are presented, initially, a
 \section{Virtual Machines}
 A virtual machine (VM) is a virtual environment that works like a computer system with its own resources, like CPU, memory, and storage, created on an actual physical hardware system. With the help of a software called  “hypervisor”, the machine’s resources get separated from the hardware so they can be provided in the right manner to be used by the VM.\\
 The physical machines, ones equipped with a hypervisor, are called host machines (host), while the many VMs that utilize its resources are guest machines (guest). The hypervisor treats the host’s resources as a pool of resources that can be simply distributed and relocated between existing guests as well as new virtual machines. VMs are also isolated from the rest of the system, and multiple of them can co-exist on a single physical piece of hardware. They can be dynamically relocated between host servers depending on demand.\\
-One of the advantages of virtual machines is allowing numerous operating systems to run on a single computer at the same time, and each operating system runs as if it’s running on the host hardware, thus the user experience within the VM is almost identical to that of a real-time operating system experience running on a physical machine\cite{vm_redhat}.
+One of the advantages of virtual machines is allowing numerous operating systems to run on a single computer at the same time, and each operating system runs as if it’s running on the host hardware, thus the user experience within the VM is almost identical to that of a real-time operating system experience running on a physical machine\cite{vm_redhat}.\\
+\\
+This allows penetration testers to apply their knowledge on disposable sandboxes that are as real as host systems, with no worry of potentially damaging hardware or harming people/organizations.
 
 \section{Penetration Testing}
 A penetration test, or a pen test, is a simulated cyberattack against a computer system for the purpose of checking for security vulnerabilities. Pen testing can expose various types of security weaknesses in an application system (e.g. APIs and servers), it can also identify unsanitized inputs that are vulnerable to code injection attacks.\\
@@ -20,7 +22,10 @@ The pen testing process can be broken down into five stages:\\
 \section{Python}
 Python is a high-level programming language that has a variety of object-oriented features. Its flexible and high-level structure makes it very attractive for developing rapid application development. Its simple and easy-to-learn syntax helps minimize program maintenance.\\
 The rapid edit-test-debug cycle of Python makes it very easy to debug programs. When an error occurs, the interpreter prints a stacktrace, which tells the program which of the available exceptions has been encountered.\\
-The source level debugger simplifies the debugging process by allowing the program to inspect and evaluate the code at a time\cite{python.org}.
+The source level debugger simplifies the debugging process by allowing the program to inspect and evaluate the code at a time\cite{python.org}.\\
+Python was the language of choice for this software, for the fact that it has most of the packages that are necessary for this work, in addition to its automation capabilities and ease of implementation.\\
+Python 3.8 is the language and version of choice for the implementation of this work.
+
 
 \section{YAML}
 YAML is a data serialization language that is often used to create configuration files,
@@ -40,5 +45,9 @@ enrolled: True
 languages:
   - english
   - german
+marks:
+  - programming: failed
+  - math: 1.0
 
 \end{lstlisting}
+YAML is the dominant file type for writing configuration files and metadata, it has the benefit of easier human readability, which helps module creators to step into writing metadata rapidly and comfortably.
