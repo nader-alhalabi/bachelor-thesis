@@ -8,6 +8,12 @@ One of the advantages of virtual machines is allowing numerous operating systems
 \\
 This allows penetration testers to apply their knowledge on disposable sandboxes that are as real as host systems, with no worry of potentially damaging hardware or harming people/organizations.
 
+\subsection{Snapshots}
+A VM snapshot saves the state and data of a virtual machine at a specific time. The state includes the VM power state ( powered-off, running, aborted), and the data includes all data stored on the VM (memory, disk)\cite{vmware}.\\
+The snapshot acts as a copy of the virtual machine and can be used to create multiple instances of the same VM or to restore the VM to a former state. Snapshots can be very useful in development and testing environments, where testing several code changes is needed to have a safe rollback point\cite{carklin_2021}.\\
+In the scope of this project, snapshots were used to roll back to a former VM state, in which the modules were not yet installed. It is not necessary to reinstall the operating system on the VM, instead, the VM can be restored to a fresh OS install before starting to run the modules install process.
+
+
 \section{Penetration Testing}
 A penetration test, or a pen test, is a simulated cyberattack against a computer system for the purpose of checking for security vulnerabilities. Pen testing can expose various types of security weaknesses in an application system (e.g. APIs and servers), it can also identify unsanitized inputs that are vulnerable to code injection attacks.\\
 The pen testing process can be broken down into five stages:\\
