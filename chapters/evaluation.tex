@@ -1,1 +1,102 @@
 \chapter{Evaluation and Test}
+This chapter will provide the testing methodology and an evaluation of the development process, and the features of the resulted product will be overviewed and the limitations will be outlined.\\
+
+\section{Unit Tests}
+Testing is a crucial task of software development, as it confirms the intended designed functionality of the implemented tools and services.
+The testing of this software can be divided into two parts; unit tests and workflow tests.\\
+Unit tests typically test the small units of a software. A unit can be a line of code, a method, or a class. Smaller tests give a much more granular view of how the code is performing\cite{unittests}.\\
+
+In this project, only the “main.py” file was unit tested, as it has the main methods with return values that can be effectively tested. Next, snippets from the test files are outlined and explained.\\
+
+\begin{lstlisting}[caption=Validation unittest, style=pythonstyle]
+def test_meta_validation():
+    assert main.meta_validation("ssh") == True
+    assert main.meta_validation("dre") == True
+    assert main.meta_validation("log-poison") == True
+\end{lstlisting}
+
+In the snippet above is a simple test, that validates different modules for their metadata files. This validation uses the “meta\_validation()” method, which reaches the “validator.py” script and tests the validation functionality on a unit level.\\
+\clearpage
+
+The next unit tests are the important part of this test script, and they should be run in the same order they are in.\\
+
+\begin{lstlisting}[caption=test\_add\_module\_ssh, style=pythonstyle]
+def test_add_module_ssh():
+    assert main.add_module("ssh") == True
+    assert main.install_list == ["ssh"]
+    assert main.dependencies_list == ["ssh"]
+\end{lstlisting}
+
+Initially, the “ssh” module is added, and asserted are the following:
+\begin{enumerate}
+  \item If the module is gone through the addition process, which includes the metadata validation and dependency management.
+  \item If the module is present in the install list.
+  \item If the dependencies of the module are appended to the dependencies list.
+\end{enumerate}
+
+As the “ssh” is a simple module with no needed dependencies, it passes properly through the full 3 tests and is added to the previously mentioned lists.\\
+\\
+However, the same can not be said for the next test, as “dre” module does need missing dependencies which are not present in the dependencies list. Thus returning “False” from the first step.\\
+This results in not appending the “dre” module to the dependencies nor the install list.
+
+\begin{lstlisting}[caption=test\_add\_module\_dre, style=pythonstyle]
+def test_add_module_dre():
+    assert main.add_module("dre") == False
+    assert main.install_list == ["ssh"]
+    assert main.dependencies_list == ["ssh"]
+\end{lstlisting}
+
+Next, the previously mentioned steps are tested on another module, namely “log-poison”.\\
+“log-poison” is also a relatively simple module that needs only “ssh” as a dependency, thus passing through the first step “add\_module” with “True” as return value. This means that the module is going to be appended successfully to the dependencies as well as the install list.
+This can be observed in the following snippet:
+
+\begin{lstlisting}[caption=test\_add\_module\_log-poison, style=pythonstyle]
+def test_add_module_log_poison():
+    assert main.add_module("log-poison") == True
+    assert main.install_list == ["ssh", "log-poison"]
+    assert main.dependencies_list == ["ssh", "php"]
+\end{lstlisting}
+
+Similarly, more different modules are added in the same way, and in the order, that lets them be appended properly to the corresponding lists.
+
+\section{Workflow Tests}
+Automation tools are considered as workflows since they have a set of components that work together to achieve the automated task. Therefore workflows should be tested in the right manner, “pytest-workflow” provides this functionality to python programs.\\
+“pytest-workflow is a pytest plugin that aims to make pipeline/workflow testing easy by using yaml files for the test configuration.”\cite{pytestworkflow}\\
+In this type of test, the validator.py and parser.py scripts and their functionality were tested.\\
+The validation workflow tests are similar to the first unit tests; they simply test that the metadata for a certain module is valid.\\
+However, this test operates on the end-user level, as it executes the same command that the user will execute when running this component.
+\\
+\begin{lstlisting}[caption=test\_validator\_ssh, style=pythonstyle]
+- name: "Validate metadata for ssh"
+  command: python validator.py ssh
+  stdout:
+      contains:
+        - "True"
+\end{lstlisting}
+
+In the snippet above, several YAML elements can be observed. “name” is for the test name that will be printed on the console. ”Command” is the bash command that pytest will be executing. Lastly, “stdout” and “contains” mean that pytest will be expecting the values under “contains” to be present in the standard output of the test.\\
+Regarding this test, it executes the command for validating “ssh” module and expects “True” as a return value in the output. The following tests have then conceptually the same behavior.\\
+\\
+The parser tests, on the other hand, have quite more details in them. They also normally execute the command for parsing modules, however, they check for files rather than the output.
+
+\begin{lstlisting}[caption=test\_parser\_ssh-userpass, style=pythonstyle]
+- name: "Parse metadata for ssh-userpass"
+  command: python parser.py ssh-userpass
+  files:
+    - path: "modules/ssh-userpass/main.sh"
+      contains:
+        - "PORT_FORWARDING"
+    - path: "modules/ssh-userpass-ready/main.sh"
+      contains:
+        - "2200"
+      must_not_contain:
+        - "PORT_FORWARDING"
+\end{lstlisting}
+
+It can be noticed now that “files” element is present, and has a list of “path” and “contains” sub-elements. This case means that pytest navigates to the file in the “path” and looks for values in “contains”.\\
+Relating to this test, pytest executes the command for parsing the module “ssh-userpass”. After that, it proceeds to the template folder for the module, and looks for the file \"modules/ssh-userpass/main.sh\". Then it checks if the placeholder “PORT\_FORWARDING” is present.\\
+Next, pytest advances to the “ready” folder of the module, and checks if the values of the placeholders are present. Additionally, it makes sure that the placeholders are no longer available using the element “most\_not\_contain”.\\
+
+
+\section{Evaluation}
+TODO
