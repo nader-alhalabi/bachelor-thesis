@@ -2,12 +2,23 @@
 This introductory chapter provides a summary of the motivation, the desired aim, and the structure of this work.
 
 \section{Motivation}
-Getting into the world of penetrating testing is a big challenge, especially when it comes to applying what was learned theoretically to an actual machine.\\
-New learners should not apply their knowledge to real targets, and setting up a testing environment can be a daunting and time-consuming task, but a program that automates this process can lift this obstacle, and with the power of Python and Bash scripts, configuring a virtual machine for pen testing can be turned into a straightforward and effortless process.
+Penetration Testing (Pen-testing) is an important and high demanded skill in the cyber security world. It is also an essential task to do when developing critical applications.
+Getting into the world of penetration testing, on the other hand, is not a trivial quest.\\
+There is a lot of information to process, plenty of vulnerabilities to learn, and a big responsibility to be had.\\
+Learning pen-testing is a big challenge, especially when it comes to applying what was learned theoretically to an actual machine. A learner can test his knowledge and skills on real targets or machines, but that can lead to harm on both sides.\\
+For this reason, beginners tend to test their newly learned skills in artificial environments, and one of the best environments for this purpose is virtual machines.\\
+However, setting up a virtual machine for pen-testing can be a daunting and time-consuming task, particularly, when a lot of vulnerabilities are involved.\\
+This work aims to automate this difficult task by developing a software that installs multiple modules. These modules act as a package that performs a specific task to a virtual machine, which can include dependencies or configurations. A user can also pass a set of parameters to configure these modules suiting the intended use. The modules then install these specific dependencies and configurations to form a hackable or penetrable virtual machine.
+
 
 \section{Objective}
-This work aims to create a simpler way to set up a virtual machine for penetration testing, in addition, it is intended to enable the user to pass a particular set of configurations through metadata.\\
-This could be achieved by implementing a python script that installs a user-defined list of modules to a specific virtual machine.
+The goal of this project aims to create a simpler way to set up a virtual machine for penetration testing, this also involves giving the user the ability to pass various configurations and parameters to the VM.\\
+The implemented software must be capable to install several modules in an automated process, that ensures the compatibility of the dependencies between them. Modules should have an organized way to handle dependencies, whether they are provided or needed.\\
+Metadata for the modules must also be designed to hold all the necessary information about a module (name, dependencies, configurations).\\
+The automated process will have a validation measurement for the metadata to guarantee the success of the process. In addition to that, the ability to set pre-defined values as configurations for the dependencies.\\
+The program must be able to communicate with VirtualBox reliably to install modules in the right manner.
+
+
 
 \section{Approach and Structure}
 This thesis can be divided into five main chapters. In the beginning, the challenges that led and inspired this work are introduced and illustrated. Chapter 2 gives an overview of the basics to understand the methods and techniques of the work, Then, in Chapter 3, the conception and design of the intended software are established.\\
