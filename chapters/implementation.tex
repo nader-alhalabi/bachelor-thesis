@@ -4,7 +4,7 @@ Every piece of component of the software will be implemented and explained on it
 
 \section{Structure}
 Before the individual scripts in this project are explained, the general structure of the software should be overviewed.\\
-As shown in figure xxx, this work consists of multiple python components, with folders for module packages and test files.\\
+As shown in figure \ref{fig:allprocess}, this work consists of multiple python components, with folders for module packages and test files.\\
 
 \begin{itemize}
   \item \textbf{validator.py} metadata validation for modules
@@ -17,9 +17,6 @@ As shown in figure xxx, this work consists of multiple python components, with f
 \end{itemize}
 The implementation of the earlier mentioned components will be explained thoroughly in the next sections.\\
 
-\section{Metadata}
-Designing the metadata schema was an essential task considering the future potential complex modules that could be created, and plenty of thought went into implementing it.\\
-Metadata is a meta.yml file inside the module, which has all crucial information for this module to be automated in this workflow.\\
 
 \section{Validator}
 Before beginning any process in this automation workflow, a validation for the meta.yml file should be prioritized, for the reason that an invalid meta.yml leads to an invalid module, since there would be a conflict of dependencies and configurations.\\
@@ -41,10 +38,9 @@ def valid_meta(module):
 
 
 First and foremost, a schema python file is loaded up in “read” mode, after that, a “Validator” instance is initiated and the schema is passed on to it.\\
-With a pre-defined function, the selected module’s metadata file is also loaded up to a variable in “read” mode, and lastly, a condition is set to validate this metadata to the formerly loaded schema, returning “True” when all schema rules match the metadata, and “False” when they do not.\\
+With a pre-defined function, the selected module’s metadata file is also loaded up to a variable in “read” mode. Lastly, a condition is set to validate this metadata against the formerly loaded schema, returning “True” when all schema rules match the metadata, and “False” when they do not.\\
 \\
-\clearpage
-A snippet from the long and very nested "schema.py" file can look like the following:
+The schema file defines the rules of the metadata, with detailed information about the data type and requirements of every entity. A snippet from the long and very nested "schema.py" file can look like the following:
 \\
 \begin{lstlisting}[caption=Validation schema, style=pythonstyle]
 {
@@ -86,7 +82,7 @@ python validator.py [MODULE]
 
 \section{Parser}
 After validating the metadata and ensuring its usability regarding the parser, the next step in the automated process is parsing and templating. Parsing is the extraction of configuration from the metadata file, particularly the provided, as well as, the needed configuration.\\
-Templating, on the other hand, as was explained in section Template engine, is when the template engine replaces the placeholders in the module with the given configuration in the metadata. However, before starting to replace placeholders, the module package acts as a template, this means the parser first replicates the module’s folder and adds “-ready” after the name of the newly copied folder, for example, the module “ssh” becomes “ssh-ready”.\\
+Templating, on the other hand, as was explained in section \ref{temp_engine}, is when the template engine replaces the placeholders in the module with the given configuration in the metadata.\\ However, before starting to replace placeholders, the module package acts as a template. This means the parser first replicates the module’s folder and adds “-ready” after the name of the newly copied folder. For example, the module “ssh” becomes “ssh-ready”.\\
 
 \begin{lstlisting}[caption=Copying directories, style=pythonstyle]
 def copy_module(module):
@@ -98,10 +94,10 @@ def copy_module(module):
         print("Module directory already exists")
 \end{lstlisting}
 This allows the reuse of modules since the original module’s folder doesn’t get tampered with.\\
-\\
-Placeholders are variables in bash scripts, they look like "\$\{VARIABLE\}", where VARIABLE stands for the placeholder’s name.\\ When the parser finds a configuration in the metadata, it contains the placeholder’s name, value, and the file where it should be replaced, then the parser proceeds to the mentioned file and checks for the variable, and replaces it with the given values.\\
+Placeholders are variables in bash scripts, they look like "\$\{VARIABLE\}", where VARIABLE stands for the placeholder’s name.\\ When the parser finds a configuration in the metadata, it contains the placeholder’s name, value, and the file where it should be replaced. Afterward, the parser proceeds to the mentioned file and checks for the variable, and replaces it with the given values.\\
+In the snippet below \ref{templating} , the parser navigates to file path, loads it in "read" mode, and starts replacing the placeholders with "safe\_substitute()". Ultimately, the output is written in the same "ready" directory.
 
-\begin{lstlisting}[caption=Templaing, style=pythonstyle]
+\begin{lstlisting}[caption=Templaing, style=pythonstyle, label=templating]
 def replace(module, filename, replacements):
     script = open('./modules/{module}-ready/{filename}'.format(module=module, filename=filename), 'r')
     script_content = script.read()
@@ -118,42 +114,47 @@ The parser can be executed by running the following command:\\
 \begin{lstlisting}[caption=Parser command, style=pythonstyle]
 python parser.py [MODULE]
 \end{lstlisting}
-\clearpage
+
 
 \section{Interacting with VirtualBox}
-The convenient “pythonic” way to communicate with Virtualbox was supposed to be a python package called “virtualbox-python”\cite{sethmlarson}, but unfortunately, the package has been not updated for quite some time, and various problems were encountered during the use of  “virtualbox-python” related to locking and unlocking virtual machine’s states and sessions.\\
-For this reason, a more simple way for interacting with VirtualBox was opted for, namely by directly executing bash commands from python, using the VirtualBox’s own CLI “VBoxManage”\cite{vboxmanage}.\\
-
-\begin{lstlisting}[caption=Restore snapshot, style=pythonstyle]
-def replace(module, filename, replacements):
+The convenient “pythonic” way to communicate with Virtualbox was supposed to be a python package called “virtualbox-python”\cite{sethmlarson}. Unfortunately, the package has not been updated for quite some time, and various problems were encountered during the use of “virtualbox-python” related to locking and unlocking virtual machine’s states and sessions.\\
+For this reason, a more simple way for interacting with VirtualBox was opted for, namely by directly executing bash commands from python, using the VirtualBox’s own CLI “VBoxManage”\cite{vboxmanage}. The internal package "subprocess"\cite{subprocess} provides the functionality of executing bash commands directly from python.
+Next, the process of restoring a snapshot using the formerly interduced tools will be explained:
+\begin{lstlisting}[caption=Restore snapshot, style=pythonstyle, escapechar=|]
 def restore_snapshot(module_name, snapshot):
     process = subprocess.Popen(
-        'vboxmanage snapshot {VMNAME} restore {STARTSNAPSHOT}'. \
+        'vboxmanage snapshot {VMNAME} restore {STARTSNAPSHOT}'. \ |\label{line:vbox}|
             format(
             VMNAME=module_name,
             STARTSNAPSHOT=snapshot
         ),
-        shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE
+        shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE |\label{line:pipes}|
     )
 
     output = process.stdout.read().decode('UTF-8')
     error = process.stderr.read().decode('UTF-8')
     print(output)
-    print("************")
+    print("************") |\label{line:stars}|
     print(error)
     process.wait()
 \end{lstlisting}
-In the scope of this work, “VBoxManage” was mainly used for starting VMs and restoring snapshots, As observed in the snippet xxx, the function "restore\_snapshot" simply takes the module and snapshot’s names and passes them to the bash command to be executed, it then prints out the standard output and error to console.\\
+
+Initially, the function "subprocess.Popen" takes the bash command as a parameter (line \ref{line:vbox}).\\
+The requested VM name and the snapshot are passed on to the command to be executed.
+Also, this function captures the standard output and error which the command produced (line \ref{line:pipes}).\\
+The output and error are then decoded and saved into variables to be printed after the command is done executing. The printed stars on line \ref{line:stars} are only to differentiate between the logs of the output and the error on the console.
+
 
 However, one disadvantage to this method is the output and error logs are only printed out after the bash script finishes executing, which means modules with a big number of dependencies can take a decent amount of time without seeing the install log or progress in real-time on the console.\\
-\clearpage
+
 
 \section{Start Script}
-Last but not least, the main script that automates all the previous components, in addition to that, has a simple dependency management to check that every module on the install queue has the needed dependencies to be able to install and/or function.\\
+Last but not least, the main script that automates all the previous components.\\
+In addition to that, it has a simple dependency management to check that every module on the install queue has the needed dependencies to be able to install and/or function.\\
 Nonetheless, the main script has two ways to execute depending on the user’s use case
 
-\subsection{Multi-module command}
-\begin{lstlisting}[caption=Multi-module mode, style=pythonstyle]
+\subsection{Multi-module mode}
+\begin{lstlisting}[caption=Multi-module command, style=pythonstyle]
 python main.py
 \end{lstlisting}
 
@@ -163,69 +164,49 @@ Nonetheless, the metadata validation check occurs first when the user adds a mod
 Dependency management, on the other hand, kicks in when the user tries to install a module, which needs one or more dependencies that are not present in the general dependencies list.
 However, if that is not the case, the dependencies of the selected module are appended to the former mentioned dependencies list, to be checked again with the next module.\\
 And as might be expected, when a module does not have any needed dependencies, it passes dependency management and gets appended directly to the install list.\\
+After the user selects the desired modules, the install process can then be started with the keyword “run”, the program then prompts the user to enter the VM’s name and snapshot’s name, so the modules can be installed on the intended VM and the right snapshot.\\
+Eventually, when the whole list of modules has finished installing, the “ready” folders of the modules are then deleted.
+\\
+\\
 
-\begin{lstlisting}[caption=Adding Module, style=pythonstyle]
-def add_module(selected_module):
-    if meta_validation(selected_module):
-        print("[*] Metadata validation successful")
-    else:
-        print("[!] Metadata validation unsuccessful")
-        return False
-
-    if check_dependencies(selected_module):
-        install_list.append(selected_module)
-        return True
-    else:
-        return False
-\end{lstlisting}
-
-After the user selects the needed modules, the install process can then be started with the keyword “run”, the program then prompts the user to type the VM’s name and snapshot’s name, so the modules can be installed on the intended VM and the right snapshot.\\
-
-\subsection{One module command}
-\begin{lstlisting}[caption=One module mode, style=pythonstyle]
+\subsection{One module mode}
+\begin{lstlisting}[caption=One module command, style=pythonstyle]
 python main.py -m [MODULE] -v [VM] -s [SNAPSHOT]
 \end{lstlisting}
 
 This mode is intended for more advanced use cases, as the selected module does not go through dependency checking, for the reason that there is no dependency list to compare to.\\
 One module mode lets the user install one module directly from the CLI, and it is the user’s responsibility to be aware of the module’s dependencies and what it needs and provides.\\
-It is activated when python recognizes arguments after calling “main.py”, and there are 3 arguments, that are all required and case sensitive:
+It is activated when python recognizes any arguments after calling “main.py”, and this can be observed in upcoming snippet\ref{if_main}:
+
+\begin{lstlisting}[caption=One module function, style=pythonstyle, label=if_main]
+if __name__ == '__main__':
+    if len(sys.argv) > 1:
+        one_module_mode()
+    else:
+        multi_module_mode()
+\end{lstlisting}
+
+One module mode accepts 3 arguments, that are all required and case sensitive:
 \begin{itemize}
   \item -m, --module : Name of the module
   \item -v, --vm : Name of virtual machine
   \item -s, --snapshot : Name of snapshot
 \end{itemize}
 
-This function is showcased in the following snippet:
 
-\begin{lstlisting}[caption=One module function, style=pythonstyle]
-def one_module_mode():
-    parser = argparse.ArgumentParser(description='Choose the module, and its VM and snapshot (CASE SENSITIVE)')
-    parser.add_argument("-m", "--module", help="Name of the module")
-    parser.add_argument("-v", "--vm", help="Name of virtual machine")
-    parser.add_argument("-s", "--snapshot", help="Name of snapshot")
-    args = parser.parse_args()
-    print(args.module,args.vm, args.snapshot)
-    if args.module not in all_modules:
-        print("Module", args.module, "is not available")
-    else:
-        global vm_name
-        vm_name = args.vm
-        runner.restore_snapshot(args.vm, args.snapshot)
-        runner.run_modules([args.module])
-        pars.delete_module(args.module)
+It was noticed that entering an invalid snapshot name does not abort the install process, rather installs the module without restoring a snapshot.\\
+However, an invalid module or VM name results in not starting the install process.
 
-if __name__ == '__main__':
-    if len(sys.argv) > 1:
-        one_module_mode()
-\end{lstlisting}
+\clearpage
+
 
 \section{Module Examples}
 The last section in the implementation chapter will glimpse through some of the uncomplicated implemented modules, that will give a simple example of what modules could be potentially created.
 
 \subsection{ssh}
-sh is an essential module to this software, as it initiates a ssh connection between the host system and the virtual machine for other modules to be able to execute scripts on the VM.
+"ssh" is an essential module to this software, as it initiates an ssh connection between the host system and the virtual machine for other modules to be able to execute scripts on the VM.
 
-\begin{lstlisting}[caption=ssh metadata, style=pythonstyle]
+\begin{lstlisting}[caption=ssh metadata, style=pythonstyle, label=ssh]
 ---
 name: ssh
 
@@ -244,44 +225,49 @@ needs:
   tech:
 \end{lstlisting}
 
-As shown in the snippet above, this represents the meta.yml file of module "ssh", it provides only one dependency with its only configuration; this configuration is "PORT\_FORWARDING", which forwards an ssh port to the host system, and the port value is “2200”, in addition, the meta.yml file indicates that the \$\{PORT\_FORWARDING\} placeholder can be found in main.sh file and should only be replaced there, and needless to say, the module does not need any additional dependencies, therefore it passes the dependency management.
+As shown in the snippet above \ref{ssh}, this represents the meta.yml file of the module "ssh", it provides only one dependency with its only configuration.\\
+This configuration is "PORT\_FORWARDING", which forwards an ssh port to the host system, and the port value is “2200”. In addition, the meta.yml file indicates that the \$\{PORT\_FORWARDING\} placeholder can be found in "main.sh" file and should only be replaced there.\\ Needless to say, the module does not need any additional dependencies, therefore it passes the dependency management process.
+
+Next, the “main.sh” script of this module will be recapped and thoroughly explained:
+
 
 \clearpage
 
-\begin{lstlisting}[caption=ssh main.sh, style=pythonstyle]
+\begin{lstlisting}[caption=ssh main.sh, style=pythonstyle, escapechar=|]
 !/usr/bin/env bash
-
 export TMPDIR=modules/ssh/temp/
 
-
-vboxmanage modifyvm ${VMNAME} --natpf1 "SSH,tcp,,${PORT_FORWARDING},,22"
+vboxmanage modifyvm ${VMNAME} --natpf1 "SSH,tcp,,${PORT_FORWARDING},,22" |\label{line:natpf}|
 vboxmanage startvm ${VMNAME} --type headless
 echo "Waiting for VM to come up..."
 sleep 8
 
-rm -f ${TMPDIR}/mariokey*
-ssh-keygen -b 2048 -t rsa -f ${TMPDIR}/mariokey -q -N ""
-sshpass -p 1234 ssh-copy-id -i ${TMPDIR}/mariokey.pub -p ${PORT_FORWARDING} mario@127.0.0.1
-chmod 700 ${TMPDIR}/mariokey*
-ssh -p ${PORT_FORWARDING} -i ${TMPDIR}/mariokey mario@127.0.0.1 "ls"
-
-rm -f ${TMPDIR}/rootkey*
+rm -f ${TMPDIR}/rootkey* |\label{line:remove_keys}|
 ssh-keygen -b 2048 -t rsa -f ${TMPDIR}/rootkey -q -N ""
 sshpass -p 1234 ssh-copy-id -i ${TMPDIR}/rootkey.pub -p ${PORT_FORWARDING} root@127.0.0.1
 chmod 700 ${TMPDIR}/rootkey*
 ssh -p ${PORT_FORWARDING} -i ${TMPDIR}/rootkey root@127.0.0.1 "ls"
 
-vboxmanage controlvm ${VMNAME} acpipowerbutton
+vboxmanage controlvm ${VMNAME} acpipowerbutton |\label{line:powerdown}|
 sleep 5
 \end{lstlisting}
 
-The main script of this module, presented by snippet xxx, manages to set the port forwarding rule with the help of the flag “--natpf1”, this is done by executing direct commands using VirtualBox’s CLI “vboxmanage”. It then proceeds to start the VM and generate an ssh root key, afterward, the script copies the public key to the VM using the ssh and the previously defined port. Finally, shutting down the VM, and eventually, getting ready for the next module.
+At the start, the temporary directory is defined to store the ssh keys that will be created.
+In line \ref{line:natpf}, the “vboxmanage” API modifies the NAT rules of the virtual machine with the argument “--natpf1”. This makes the VM port forwards the value at the placeholder \${PORT\_FORWARDING}, which will be replaced by the parser to include the desired value in the metadata.
+
+The module then starts the virtual machine in headless mode and waits for the VM to fully boot up.\\
+Starting at line \ref{line:remove_keys}, the script force removes any previously created root keys that are already created in the temporary directory. Afterward, an RSA key is generated using “ssh-keygen” command and stored again in the temporary directory.\\
+Next, an ssh connection is made using the public key, and again, through the previously defined forwarded port. Following this, the access permissions for the keys are modified, so other modules can also initiate a connection as the same root user.\\
+Last but not least, at line \ref{line:powerdown}, a test ssh connection is made with the root key, and a “ls” command is executed, which lists all files in the current working directory.\\
+Finally, the virtual machine is powered down to apply the changes and be ready for the next modules.
+
+
 \clearpage
 
 \subsection{ssh-userpass}
 The purpose of this module is to automatically create users with their passwords on the Linux VM, this allows for quick generation of multiple users, for example, this can be handful for the training for privilege escalation.
 
-\begin{lstlisting}[caption=ssh metadata, style=pythonstyle]
+\begin{lstlisting}[caption=ssh-userpass metadata, style=pythonstyle]
 ---
 name: ssh-userpass
 
@@ -291,54 +277,42 @@ provides:
         name: ssh
         version:
         config:
+          - name: PORT_FORWARDING
+            file: main.sh
+            value:
+            - "2200"
           - name: username:password
             file: userpass_script.sh
             value:
             - nader:pass
             - max:muster
 
-
 needs:
   tech:
-    - entry:
-        name: ssh
-        version:
-        config:
-          - name: PORT_FORWARDING
-            file: main.sh
-            value:
-            - "2200"
 \end{lstlisting}
 
-For this module to work, the ssh port forwarding rule is needed, and as shown in the meta.yml file, under “needs” entity there is the port forwarding placeholder (PORT\_FORWARDING), the files in which the placeholder is going to be replaced (main.sh), and the port value (2200), the same configuration that module “ssh” provides.\\
-However, the provided configuration from the module “ssh-userpass” is a unique case, that is specially handled by the parser when it marks a colon ( : ), in this case “username:password”, and this keyword triggers the function that handles multiple values and writes them in a script (userpass\_script.sh) using a loop.\\
-\clearpage
+As observed in the “metadata.yml” file above, this module has the same provided features as “ssh” module, in addition to a “username:password” configuration.\\
+This configuration provides a rapid way to add a user-defined list of users and passwords. It is specially handled by the parser, and it is triggered when a colon ( : ) is present in the configuration’s name.\\
+The special handler is to be seen in “parser.py” script and showcased in the following snippet:
 
-\begin{lstlisting}[caption=ssh-userpass parsing, style=pythonstyle]
+
+\begin{lstlisting}[caption=ssh-userpass parsing, style=pythonstyle, escapechar=|]
 def user_pass_parse(module, filename, conf):
     users = conf["value"]
     for user in users:
         username, password = user.split(":")
-        script = open('./modules/{module}-ready/resources/{filename}'.format(module=module, filename=filename), 'a')
-        script.write('sudo useradd -p $(openssl passwd -1 {password}) {username}\n'.format(username = username, password = password))
+        script = open('./modules/{module}-ready/resources/{filename}'.format(module=module, filename=filename), 'a') |\label{line:help_script}|
+        script.write('sudo useradd -p $(openssl passwd -1 {password}) {username}\n'.format(username = username, password = password)) |\label{line:oneliner}|
 
     script.write('rm /root/userpass_script.sh')
     script.close()
 \end{lstlisting}
 
-Nonetheless, this module adds a simple functionality no top of “ssh” module, which is secure copying the helper script to the VM, and executing it there with a root privilege.
-The helper script creates new users on Linux with a one-liner.\\
+As mentioned, when the special parser is triggered, the list of users from the metadata is passed on to the function “user\_pass\_parse()”. The users are then put through a for loop to do several tasks.\\
+Firstly, the usernames and passwords are split into different variables, since they are in the form of “username:password”. Next, in line \ref{line:help_script}, a new helper script is created (userpass\_script.sh).\\
+Afterward, the usernames and passwords are passed to a bash script, that adds a user to a Linux system in one line\ref{line:oneliner}. Lastly, the helper script is deleted.\\
 
-\begin{lstlisting}[caption=ssh-userpass main.sh, style=pythonstyle]
-
-#!/usr/bin/env bash
-
-export TMPDIR=modules/ssh/temp/
-export RESOURCEDIR=modules/ssh-userpass/resources/
-
-scp -P ${PORT_FORWARDING} -i ${TMPDIR}/rootkey ${RESOURCEDIR}/userpass_script.sh root@127.0.0.1:/root/
-ssh -p ${PORT_FORWARDING} -i ${TMPDIR}/rootkey root@127.0.0.1 "bash /root/userpass_script.sh"
-\end{lstlisting}
+The produced helper script will look like the following after appending the list of usernames and passwords:
 
 \begin{lstlisting}[caption=userpass\_script.sh, style=pythonstyle]
 sudo useradd -p \$(openssl passwd -1 pass) nader

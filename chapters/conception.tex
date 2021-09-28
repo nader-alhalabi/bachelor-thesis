@@ -103,11 +103,11 @@ config:  # list
 It could be noticed, that the “needs” entity does not have a “tech-config” entity of its own. That is for the reason that a module can not need a certain configuration without needing its dependency as well, thus deprecating the use of “tech-config” for it.
 
 
-\section{Template Engine}
+\section{Template Engine} \label{temp_engine}
 The metadata defines what dependencies the module has, and what configuration it provides and/or needs. This shows that parsing the metadata file must be done in an organized way.
 
 When a module has a configuration, it consists of a placeholder in the main bash script or any other scripts in the resources folder. These placeholders are the locations where the values from the metadata should be replaced. This is where a template engine is used.
 
 “A template engine enables you to use static template files in your application. At runtime, the template engine replaces variables in a template file with actual values, and transforms the template into an HTML file sent to the client.”\cite{template}
 
-This can be done by using an internal package of python called “string”, this package has a helpful function, namely “Validation”\cite{string}. It replaces placeholders with identifiers of the form \$\{PLACEHOLDER\}.
+This can be done by using an internal package of python called “string”, this package has a helpful function, namely “Template”\cite{string}. It replaces placeholders with identifiers of the form \$\{PLACEHOLDER\}.
