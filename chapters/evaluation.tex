@@ -99,4 +99,11 @@ Next, pytest advances to the “ready” folder of the module, and checks if the
 
 
 \section{Evaluation}
-TODO
+It has become apparent that this work focuses primarily on two aspects. These are the automation process and the module design.\\
+The abstract goal of this work was to implement an automation tool for the purpose of modifying virtual machines. To evaluate the results of this implementation, the achieved objectives should be discussed and assessed.\\
+Firstly, the process design was straightforward, running a python script should be able to execute different bash scripts in the modules. However, designing the initial prototype of this process was challenging, as the provided proof-of-concept examples were simple. Thus requiring a lot of pre-thinking to consider many potential module configurations and options.\\
+Nonetheless, a reliable process was developed and future modules were considered along the way. The tasks which form the automation process had their own challenges as well.\\
+Mainly, template engines are usually implemented for web development to template HTML files with backend values.\\ Therefore, finding a template engine that is optimized for bash scripts was a difficult mission. Ultimately, a simple approach was opted for, considering the limitations it has.
+The parsing and validation components had good and well-founded libraries for each of them. As a result, the implementation of these parts was uncomplicated.\\
+The passing of configurations requires little knowledge in editing YAML files, as it is not trivial as entering the parameters in the UI. Finally, the approach that was illustrated in the practical part of this thesis is suitable only for systems, which are based on a Linux distribution.
+In the end, the objectives were successfully achieved despite the faced challenges and obstacles.

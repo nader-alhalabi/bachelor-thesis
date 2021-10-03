@@ -1,1 +1,21 @@
 \chapter{Conclusion}
+The last chapter in this work is going to briefly summarize the development process and some of the limitations of this implementation will be overviewed. Lastly, the potential future development of this project is shortly outlined.
+
+\section{Summary}
+This work dealt with the conception and the possible implementation of a software to configure virtual machines for penetration testing. The possibility to implement an automation tool for this task was researched. This tool must automate the process of installing user-defined modules to configure and modify virtual machines. It should also be possible to pass configurations and parameters at will to the modules to be installed along with the modules themselves.
+In the course of this work, a practical implementation was realized. For this implementation
+was the priority that it could be finished within the time frame of this work.\\
+The objectives of this project were achieved,
+The modules were designed to act as a small automation system of their own. Every module has one or more tasks. Combining these modules produces a “penetrable” or “hackable” VM which introduces a certain vulnerability to pen test with.\\
+The software consisted of multiple components, and every component was implemented as a standalone unit. A main script was then written to automate all of these components in a managed and organized approach.\\ Finally, workflow tests were implemented to confirm the functionality of each component.
+
+\section{Limitations}
+It is very difficult to create perfect software, and this software has its own imperfections regarding the implementation methods and design. Needless to say, the observed imperfections need to be addressed.
+
+First, the software does not differentiate between the placeholder’s identifiers. This means when the parser tries to replace a placeholder with values from the metadata, it can not recognize if the placeholder \$\{VARIABLE\} is a configuration placeholder or a necessary variable for the functionality of the script itself. For this reason, the module creator should give attention to the naming of placeholders between the scripts and the metadata.\\
+Another limitation is the naming rules of the scripts. The main script of the modules can only be named “main.sh”, as it’s hardcoded in the program. It could have been dynamically set according to its metadata, but it could have added a layer of unneeded complexity to the metadata structure as well as the install process. After all, most of the time the main script does only the initial functions such as the SSH connection, and it is good practice to have an organized module structure.\\
+The last inconvenience is that after starting the install process of modules, the output and error logs are only printed on the console after a module install is finished, and not during the process. This is caused by the design of the “subprocess” library as it buffers all the output in variables, and prints it only after the execution of the bash command is finished. This can be annoying when installing large modules that provide a big number of dependencies since the output logs - and potentially the error logs - can not be observed immediately.
+
+\section{Future Development}
+The current state of this work only scratches the surface of the potential functionality of the project. The modules are particularly where the future development potential lies. As the structure of the modules allows for great expandability in the functionality of the scripts.\\
+In addition to that, a web interface for the tool can be developed to provide the ability to select modules and pass configurations without editing the metadata. This will also make the tool more accessible to average users, thus making penetration testing more approachable.
