@@ -20,8 +20,8 @@ In the snippet above is a simple test, that validates different modules for thei
 
 The next unit tests are the important part of this test script, and they should be run in the same order they are in.\\
 
-\begin{lstlisting}[caption=test\_add\_module\_ssh, style=pythonstyle]
-def test_add_module_ssh():
+\begin{lstlisting}[caption=test\_add\_module\_no\_dependencies, style=pythonstyle]
+def test_add_module_no_dependencies():
     assert main.add_module("ssh") == True
     assert main.install_list == ["ssh"]
     assert main.dependencies_list == ["ssh"]
@@ -39,22 +39,22 @@ As the “ssh” is a simple module with no needed dependencies, it passes prope
 However, the same can not be said for the next test, as “dre” module does need missing dependencies which are not present in the dependencies list. Thus returning “False” from the first step.\\
 This results in not appending the “dre” module to the dependencies nor the install list.
 
-\begin{lstlisting}[caption=test\_add\_module\_dre, style=pythonstyle]
-def test_add_module_dre():
+\begin{lstlisting}[caption=test\_add\_module\_unsatisfied, style=pythonstyle]
+def test_add_module_unsatisfied():
     assert main.add_module("dre") == False
     assert main.install_list == ["ssh"]
     assert main.dependencies_list == ["ssh"]
 \end{lstlisting}
 
-Next, the previously mentioned steps are tested on another module, namely “log-poison”.\\
-“log-poison” is also a relatively simple module that needs only “ssh” as a dependency, thus passing through the first step “add\_module” with “True” as return value. This means that the module is going to be appended successfully to the dependencies as well as the install list.
-This can be observed in the following snippet:
+Next, the missing dependencies for module “dre” are added using the module “lemp” to prove that providing the needed dependencies for “dre ”will then let it be added to the install list.\\
+This means that both modules are going to be appended successfully to the dependencies as well as the install list. This can be observed in the following snippet:
 
-\begin{lstlisting}[caption=test\_add\_module\_log-poison, style=pythonstyle]
-def test_add_module_log_poison():
-    assert main.add_module("log-poison") == True
-    assert main.install_list == ["ssh", "log-poison"]
-    assert main.dependencies_list == ["ssh", "php"]
+\begin{lstlisting}[caption=test\_add\_module\_satisfied , style=pythonstyle]
+def test_add_module_satisfied():
+    assert main.add_module("lemp") == True
+    assert main.add_module("dre") == True
+    assert main.install_list == ["ssh", "lemp", "dre"]
+    assert main.dependencies_list == ["ssh", "php-fpm", "mysql", "nginx", "patch", "php-gnupg"]
 \end{lstlisting}
 
 Similarly, more different modules are added in the same way, and in the order, that lets them be appended properly to the corresponding lists.
