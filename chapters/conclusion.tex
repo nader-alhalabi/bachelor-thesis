@@ -19,3 +19,17 @@ The last inconvenience is that after starting the install process of modules, th
 \section{Future Development}
 The current state of this work only scratches the surface of the potential functionality of the project. The modules are particularly where the future development potential lies. As the structure of the modules allows for great expandability in the functionality of the scripts.\\
 In addition to that, a web interface for the tool can be developed to provide the ability to select modules and pass configurations without editing the metadata. This will also make the tool more accessible to average users, thus making penetration testing more approachable.
+
+\section{Key Takeaways}
+Throughout this project, some takeaways were noticed during its development. These takeaways reflect the writer’s objective opinions on the development and design processes.
+Naturally, the development process had its ups and downs. One of the components which were painlessly implemented is the integration of the validation library “cerberus”. As it had very good documentation and simple examples to quickly get started.\\
+\\
+\\
+On the other hand, not everything went smoothly in the process. The most troublesome part was trying to find python libraries that handle VirtualBox’s API. It was unexpected to find out that all the libraries for this task were quite outdated and can’t be reliably used in this project.
+
+Having said that, there is a great number of takeaways from this work that can be carried on to future projects. First, the initial design phase was very important, and it is essential to think about it all the way through. As this spares a lot of time in the implementation phase. For example, a late change in the configuration entity in the metadata file has caused a fair amount of work afterward to adapt this change in the parser and validator.
+
+This leads to the next takeaway, the project should have got more complicated module examples to account for more complex configurations. Since the content of the modules was not the core point of this work and designing more complicated and saturated modules was out of scope. Thus depending only on the provided modules which were simple and do not cover the full functionality of the program.
+
+This software still has a lot of functionality in its full vision, like algorithmic queueing for modules, web GUI, and easy passing of configurations. This has made the first impression of the concept very overwhelming. Therefore a big amount of time was wasted at first researching unnecessary VirtualBox information. While the true goals of this project were the different tasks inside the automation process, as well as the metadata structure. This could have been certainly done better.\\
+After finishing this work, it was learned that good design simplifies the implementation, objectives should be always firmly decided beforehand, and documentation while prototyping is crucial.
