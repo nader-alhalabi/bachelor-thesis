@@ -20,7 +20,6 @@ The implementation of the earlier mentioned components will be explained thoroug
 
 \section{Validator}
 Before beginning any process in this automation workflow, a validation for the meta.yml file should be prioritized, for the reason that an invalid meta.yml leads to an invalid module, since there would be a conflict of dependencies and configurations.\\
-
 For this task, a validation tool "called “cerberus” is used. “cerberus” provides simple and lightweight data validation functionality and is designed to be easily extensible, allowing for custom validation\cite{cerberus}. It takes a pre-defined schema and validates it against the passed module’s metadata.
 
 \begin{lstlisting}[caption=Metadata validation, style=pythonstyle]
@@ -176,7 +175,7 @@ python main.py -m [MODULE] -v [VM] -s [SNAPSHOT]
 
 This mode is intended for more advanced use cases, as the selected module does not go through dependency checking, for the reason that there is no dependency list to compare to.\\
 One module mode lets the user install one module directly from the CLI, and it is the user’s responsibility to be aware of the module’s dependencies and what it needs and provides.\\
-It is activated when python recognizes any arguments after calling “main.py”, and this can be observed in upcoming snippet\ref{if_main}:
+It is activated when python recognizes any arguments after calling “main.py”, and this can be observed in upcoming snippet \ref{if_main}:
 
 \begin{lstlisting}[caption=One module function, style=pythonstyle, label=if_main]
 if __name__ == '__main__':
@@ -195,7 +194,7 @@ One module mode accepts 3 arguments, that are all required and case sensitive:
 
 
 It was noticed that entering an invalid snapshot name does not abort the install process, rather installs the module without restoring a snapshot.\\
-However, an invalid module or VM name results in not starting the install process.
+However, an invalid module or VM name results in not starting the install process at all.
 
 \clearpage
 
@@ -253,7 +252,7 @@ sleep 5
 \end{lstlisting}
 
 At the start, the temporary directory is defined to store the ssh keys that will be created.
-In line \ref{line:natpf}, the “vboxmanage” API modifies the NAT rules of the virtual machine with the argument “--natpf1”. This makes the VM port forwards the value at the placeholder \${PORT\_FORWARDING}, which will be replaced by the parser to include the desired value in the metadata.
+In line \ref{line:natpf}, the “vboxmanage” API modifies the NAT rules of the virtual machine with the argument “--natpf1”. This makes the VM port forwards the value at the placeholder \$\{PORT\_FORWARDING\}, which will be replaced by the parser to include the desired value in the metadata.
 
 The module then starts the virtual machine in headless mode and waits for the VM to fully boot up.\\
 Starting at line \ref{line:remove_keys}, the script force removes any previously created root keys that are already created in the temporary directory. Afterward, an RSA key is generated using “ssh-keygen” command and stored again in the temporary directory.\\
@@ -308,9 +307,9 @@ def user_pass_parse(module, filename, conf):
     script.close()
 \end{lstlisting}
 
-As mentioned, when the special parser is triggered, the list of users from the metadata is passed on to the function “user\_pass\_parse()”. The users are then put through a for loop to do several tasks.\\
+As mentioned, when the special parser is triggered, the list of users from the metadata is passed on to the function “user\_pass\_parse()”. The users are then put through a "for loop" to do several tasks.\\
 Firstly, the usernames and passwords are split into different variables, since they are in the form of “username:password”. Next, in line \ref{line:help_script}, a new helper script is created (userpass\_script.sh).\\
-Afterward, the usernames and passwords are passed to a bash script, that adds a user to a Linux system in one line\ref{line:oneliner}. Lastly, the helper script is deleted.\\
+Afterward, the usernames and passwords are passed to a bash script, that adds a user to a Linux system in one line \ref{line:oneliner}. Lastly, the helper script is deleted.\\
 
 The produced helper script will look like the following after appending the list of usernames and passwords:
 

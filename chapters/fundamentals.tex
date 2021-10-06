@@ -1,5 +1,5 @@
 \chapter{Fundamentals}
-In this chapter, the technical basics of this thesis are presented, initially, an introduction to virtual machines and penetration testing is given, followed by some explanation on python and YAML files.
+In this chapter, the technical basics of this thesis are presented, initially, an introduction to virtual machines and penetration testing is given, followed by some explanation on python and YAML files. Also, the concepts of validation and templating are briefly overviewed.
 
 \section{Virtual Machines}
 A virtual machine (VM) is a virtual environment that works like a computer system with its own resources, like CPU, memory, and storage, created on an actual physical hardware system. With the help of a software called  “hypervisor”, the machine’s resources get separated from the hardware so they can be provided in the right manner to be used by the VM.\\
@@ -32,7 +32,7 @@ Python 3.8 is the language and version of choice for the implementation of this 
 
 \section{Metadata}
 Metadata is a type of structured reference data that contains the attributes of an information source. It is often referred to as data that describes other data.\\
-Meta is a prefix that simply means \"an underlying description or definition of data.\" Metadata helps users easily find, use, reuse certain instances of data. For example, author, date created and file size are basic document file metadata.
+Meta is a prefix that simply means "an underlying description or definition of data." Metadata helps users easily find, use, reuse certain instances of data. For example, author, date created and file size are basic document file metadata.
 Metadata can be created in various ways, such as manual or automated. The former can likely be more accurate, allowing the user to input any information that they feel is relevant to the file\cite{Kranz2021Jul}.\\
 Manual creation of metadata is the relevant type for this project. Modules creators must write a metadata YAML file, that describes the most crucial information to run this module.
 This metadata file can hold the name, version, and different dependencies, which this module provides or needs. Although, most importantly are the configurations details.\\
@@ -41,14 +41,12 @@ With metadata describing the relevant information in the module, it makes readin
 
 \section{YAML}
 YAML is a data serialization language that is often used to create configuration files,
-It stands for yet another markup language and evolved into ain’t markup language,  which highlights that YAML is for data and not for documents. It is also easy to understand and is human-readable.\\
+It stands for "yet another markup language" and evolved into "ain’t markup language",  which highlights that YAML is for data and not for documents. It is also easy to understand and is human-readable.\\
 YAML is a superset of JSON, so JSON files are valid in YAML, but it uses Python-style indentation to indicate nesting, as there are no usual format symbols, such as braces, square brackets, YAML files use a .yml or .yaml extension.\\
 The structure of a YAML file is a map or a list.
 Mappings allow you to group key-value pairs into distinct values. Order is not relevant, and each key must be unique. A map needs to be resolved before it can be closed. A new map can then be created by either creating an adjacent map or increasing the indentation level.\\
 A list sequence is a type of object that contains values in an order. It can contain multiple items, and starts with a dash (-) and a space, while indentation separates it from the parent.
-Naturally, YAML also contains scalars that can be used as values such as strings, integers, or booleans\cite{yaml_redhat}.
-
-Example of YAML syntax:
+Naturally, YAML also contains scalars that can be used as values such as strings, integers, or booleans\cite{yaml_redhat}. The following is an example of YAML syntax:
 
 \begin{lstlisting}[caption=YAML example, style=pythonstyle]
 ---
@@ -77,7 +75,7 @@ For example, a “name” key is required to be present, and the value is requir
 
 
 \section{Templating}
-emplating, or web templating, is an approach to represent data in various forms. It often involves the creation of a document (template) and the presentation of data in a form that is easily understood by a human audience.\\
+Templating, or web templating, is an approach to represent data in various forms. It often involves the creation of a document (template) and the presentation of data in a form that is easily understood by a human audience.\\
 The template generally looks like the final form, only with placeholders instead of actual data, which are typically in a simple form.\\
 Data that is presented using that template can be also separated into two parts, data required to be rendered, and data required for the template itself (navigation elements if it is a site). Combining template and data creates the final output, which is usually a web page of some kind\cite{templating}.\\
 The modules in this project have also placeholders in their scripts (templates), which represent certain user-defined configurations written in the metadata file. The values of the configurations then replace the placeholders in the different scripts.\\

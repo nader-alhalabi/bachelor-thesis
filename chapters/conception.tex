@@ -11,7 +11,7 @@ A module is a user-defined package, that does one or more sets of tasks and it h
     \item \textbf{Resources}
 \end{enumerate}
 The metadata is a configuration file written in YAML, it defines all of the features of the corresponding module, and especially the provided and/or the needed dependencies. This file can also hold important configurations which are essential for the functionality of the module.
-Metadata has some rules that will be covered later in the design chapter.
+Metadata has some rules that will be covered later in this chapter.
 
 The main script is a Bash script, which acts as a start point to the module, it usually has the initial SSH connecting and resources copying commands.
 
@@ -47,7 +47,7 @@ The second way is by controlling the modules from the main python script itself,
 
 However, before the main python script executes the bash scripts in the modules, there need to be some necessary operations done.\\
 First of all, metadata must be validated to ensure proper parsing of the YAML file, and afterward, the configurations available in the metadata must be parsed and then replaced with placeholders in the module’s scripts.\\
-The intended designed process will then look like the following figure\ref{fig:allprocess}:\\
+The intended designed process will then look like the following figure \ref{fig:allprocess}:\\
 \\
 
 \begin{figure}[!ht]

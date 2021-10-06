@@ -94,7 +94,7 @@ The parser tests, on the other hand, have quite more details in them. They also 
 \end{lstlisting}
 
 It can be noticed now that “files” element is present, and has a list of “path” and “contains” sub-elements. This case means that pytest navigates to the file in the “path” and looks for values in “contains”.\\
-Relating to this test, pytest executes the command for parsing the module “ssh-userpass”. After that, it proceeds to the template folder for the module, and looks for the file \"modules/ssh-userpass/main.sh\". Then it checks if the placeholder “PORT\_FORWARDING” is present.\\
+Relating to this test, pytest executes the command for parsing the module “ssh-userpass”. After that, it proceeds to the template folder for the module, and looks for the file "modules/ssh-userpass/main.sh". Then it checks if the placeholder “PORT\_FORWARDING” is present.\\
 Next, pytest advances to the “ready” folder of the module, and checks if the values of the placeholders are present. Additionally, it makes sure that the placeholders are no longer available using the element “most\_not\_contain”.\\
 
 
